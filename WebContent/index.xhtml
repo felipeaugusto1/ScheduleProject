@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Schedule</title>
+	<h:outputScript library="js" name="#{scheduleBean.getLocale()}.js" />
+</h:head>
+
+<h:body>
+	<h:form>
+		<p:schedule value="#{scheduleBean.lazySchedule}" widgetVar="meu_schedule" locale="#{scheduleBean.getLocale()}" timeZone="GMT-2">
+			<p:ajax event="dateSelect" listener="#{scheduleBean.selecionarData}" update="eventoDetalhes" oncomplete="PF('eventoDialog').show();" />
+			<p:ajax event="eventSelect" listener="#{scheduleBean.selecionarEvento}" update="eventoDetalhes" oncomplete="PF('eventoDialog').show();" />
+			<p:ajax event="eventMove"/>
+		</p:schedule>
+	
+		<p:dialog widgetVar="eventoDialog" header="Detalhe do Evento" showEffect="clip" hideEffect="clip">
+			<h:panelGrid id="eventoDetalhes" columns="2">
+				<p:outputLabel for="title" value="Título" />
+				<p:inputText id="title" value="#{scheduleBean.event.title}" required="true" />
+	
+				<p:outputLabel for="from" value="Data de Início:" />
+				<p:calendar id="from" value="#{scheduleBean.event.startDate}" pattern="dd/MM/yyyy HH:mm" />
+	
+				<p:outputLabel for="to" value="Data de Término:" />
+				<p:calendar id="to" value="#{scheduleBean.event.endDate}" pattern="dd/MM/yyyy HH:mm" />
+	
+				<p:commandButton id="addButton" value="Salvar" actionListener="#{scheduleBean.adicionarEvento}" oncomplete="PF('meu_schedule').update(); PF('eventoDialog').hide();" />
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+	
+</h:body>
+</html>
